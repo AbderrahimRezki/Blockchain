@@ -4,7 +4,6 @@ import json
 
 class Blockchain:
     def __init__(self):
-        self.sha256 = hashlib.sha256()
         self.chain = []
         self.create_block(1, "0")
         
@@ -33,14 +32,15 @@ class Blockchain:
             
         return new_proof
     
+    @staticmethod
     def hash(self, block):
-        block.sort()
+        sha256 = hashlib.sha256()        
+        json_block = json.dumps(block, sort_keys=True).encode()
+        sha256.update(json_block)
         
-        json_block = json.dumps(block).encode()
-        self.sha256.update(json_block)
-        
-        return self.sha256.hexdigest()
+        return sha256.hexdigest()
     
+    @staticmethod
     def chain_valid(self, chain):
         genesis = chain[0]
         
@@ -63,9 +63,11 @@ class Blockchain:
                 return False
             
         return True
-            
+    
+    @staticmethod
     def __validate_proof(self, previous_proof, new_proof):
-        self.sha256.update(str(previous_proof**2 - new_proof**2).encode())
-        hash_value = self.sha256.hexdigest()
+        sha256 = hashlib.sha256()
+        sha256.update(str(previous_proof**2 - new_proof**2).encode())
+        hash_value = sha256.hexdigest()
         
         return hash_value.startswith("f")
