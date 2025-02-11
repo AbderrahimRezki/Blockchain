@@ -21,3 +21,12 @@ def mine_block():
     })
     
     return response, 200
+
+@app.route("/get_chain", methods=["GET"])
+def display_chain():
+    response = json.dump({
+        "chain": blockchain.chain,
+        "chain_len": len(blockchain.chain)
+    })
+    
+    return response, 200
