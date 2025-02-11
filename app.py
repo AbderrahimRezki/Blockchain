@@ -15,7 +15,7 @@ def mine_block():
     prev_hash = Blockchain.hash(prev_block)
     new_block = blockchain.create_block(new_proof, prev_hash)
     
-    response = json.dump({
+    response = json.dumps({
         "message": "Block mined successfully.",
         **new_block
     })
@@ -24,9 +24,23 @@ def mine_block():
 
 @app.route("/get_chain", methods=["GET"])
 def display_chain():
-    response = json.dump({
+    response = json.dumps({
         "chain": blockchain.chain,
         "chain_len": len(blockchain.chain)
     })
     
     return response, 200
+
+@app.route("/valid", methods=["GET"])
+def validate_chain():
+    validity = "valid" if Blockchain.chain_valid(blockchain.chain) else "invalid"
+    
+    response = json.dumps({
+        "message": f"Your chain is {validity}." 
+    })
+    
+    return response, 200
+
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5000, debug=True)
